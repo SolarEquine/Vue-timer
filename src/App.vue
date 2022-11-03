@@ -1,36 +1,23 @@
 <template>
 <div>
-  <div class="timer">
-    <div class="container">
-      <div class="timer__inner">
-        <div
-          class="timer__body"
-          >
-          {{ parsedTime }}
-        </div>
-        <div class="timer__controls">
-          <button @click="startTimer">Старт</button>
-          <button @click="stopTimer">Стоп</button>
-          <button @click="createLap">Круг</button>
-        </div>
-        <div class="timer__laps">
-          <div class="laps">
-            <div
-              v-for="lap in laps.slice().reverse()"
-              :key="lap.id"
-             class="lap">{{lap.id}}: {{lap.h}}:{{lap.m}}:{{lap.s}}:{{lap.ms}}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <my-timer
+  :laps="laps"
+  :timeDelta="parsedTime"
+  @start="startTimer"
+  @stop="stopTimer"
+  @lap="createLap"
+  ></my-timer>
 </div>
 </template>
 
 <script>
-
+import MyTimer from "@/components/MyTimer";
 
 export default {
+
+  components: {
+    MyTimer,
+  },
 
   data(){
     return{
@@ -43,7 +30,6 @@ export default {
       milliseconds: 0,
       parsedSeconds: '',
       parsedTime: '',
-      fullTime: 0,
       timeDelta: 0,
       timeStart: 0,
       timeEnd: 0,
@@ -109,6 +95,7 @@ export default {
   margin: 0;
   padding: 0;
 }
+
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 body{
@@ -116,70 +103,5 @@ body{
 
 }
 
-.container{
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-}
 
-.timer__inner{
-  display: flex;
-  min-height: 100vh;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.timer__body{
-  height: 300px;
-  width: 300px;
-  margin-top: 20px;
-  border: 10px solid white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  margin-bottom: 20px;
-  font-size: 50px;
-  color: white;
-  font-family: Roboto;
-}
-
-.timer__laps{
-  flex: 1 1 0;
-}
-
-.laps{
-  width: 300px;
-}
-
-.lap{
-  border-bottom: 1px white solid;
-  margin-bottom: 10px;
-  color:white;
-  font-family: Roboto;
-}
-
-.timer__controls{
-  display: flex;
-  justify-content: space-between;
-  width: 200px;
-}
-
-button{
-  background: #4BA3C3;
-  border: 2px solid #CCE6F4;
-  border-radius: 15px;
-  padding: 10px;
-  cursor: pointer;
-  font-size: 15px;
-  color: #CCE6F4;
-  transition: all .2s ease;
-  font-family: Roboto;
-}
-
-button:hover{
-  background: #CCE6F4;
-  color: #4BA3C3;
-}
 </style>
