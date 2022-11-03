@@ -18,7 +18,7 @@
             <div
               v-for="lap in laps.slice().reverse()"
               :key="lap.id"
-             class="lap">{{lap.id}}: {{lap.h}}:{{lap.m}}:{{lap.s}}</div>
+             class="lap">{{lap.id}}: {{lap.h}}:{{lap.m}}:{{lap.s}}:{{lap.ms}}</div>
           </div>
         </div>
       </div>
@@ -40,9 +40,13 @@ export default {
       minutes: 0,
       parsedMinutes: '',
       seconds: 0,
+      milliseconds: 0,
       parsedSeconds: '',
       parsedTime: '',
       fullTime: 0,
+      timeDelta: 0,
+      timeStart: 0,
+      timeEnd: 0,
       Timer: 0,
       laps: [
       ]
@@ -52,9 +56,11 @@ export default {
     
     startTimer(){
       this.isTimerStarted = true;
-        this.Timer = setInterval(()=>{
-          this.fullTime++;
-      }, 1000);
+      this.timeStart = Date.now();
+      this.Timer = setInterval(()=>{
+        this.timeEnd = Date.now();
+        this.timeDelta = this.timeEnd - this.timeStart;
+      }, 10);
     },
     stopTimer(){
       this.isTimerStarted = false;
@@ -62,13 +68,15 @@ export default {
     },
 
     parseTime(){
-      this.seconds = this.fullTime%60;
-      this.minutes = Math.floor(this.fullTime/60)%60;
-      this.hours = Math.floor(this.fullTime/60/60);
+      this.milliseconds = this.timeDelta%100;
+      this.seconds = Math.floor(this.timeDelta/1000)%60;
+      this.minutes = Math.floor(this.timeDelta/1000/60)%60;
+      this.hours = Math.floor(this.timeDelta/1000/60/60)%60;
+      this.parsedMSeconds = this.parseTimeUnit(this.milliseconds);
       this.parsedSeconds = this.parseTimeUnit(this.seconds);
       this.parsedMinutes = this.parseTimeUnit(this.minutes);
       this.parsedHours = this.parseTimeUnit(this.hours);
-      this.parsedTime = `${this.parsedHours}:${this.parsedMinutes}:${this.parsedSeconds}`;
+      this.parsedTime = `${this.parsedHours}:${this.parsedMinutes}:${this.parsedSeconds}:${this.parsedMSeconds}`;
     },
     parseTimeUnit(timeUnit){
       if (timeUnit<10){
@@ -78,7 +86,7 @@ export default {
     },
     createLap(){
       if(this.isTimerStarted){
-        let lap = {id: this.laps.length+1, h:this.hours, m:this.minutes, s:this.seconds};
+        let lap = {id: this.laps.length+1, h:this.hours, m:this.minutes, s:this.seconds, ms:this.milliseconds};
         this.laps.push(lap);
       }
     }
@@ -89,7 +97,7 @@ export default {
   },
 
   watch:{
-    fullTime(){
+    timeDelta(){
       this.parseTime();
     }
   }
@@ -123,9 +131,10 @@ body{
 }
 
 .timer__body{
-  height: 200px;
-  width: 200px;
-  border: 6px solid white;
+  height: 300px;
+  width: 300px;
+  margin-top: 20px;
+  border: 10px solid white;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -136,12 +145,19 @@ body{
   font-family: Roboto;
 }
 
+.timer__laps{
+  flex: 1 1 0;
+}
+
 .laps{
-  width: 150px;
+  width: 300px;
 }
 
 .lap{
   border-bottom: 1px white solid;
+  margin-bottom: 10px;
+  color:white;
+  font-family: Roboto;
 }
 
 .timer__controls{
