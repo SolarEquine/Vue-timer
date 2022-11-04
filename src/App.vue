@@ -2,9 +2,9 @@
 <div>
   <my-timer
   :laps="laps"
-  :timeDelta="parsedTime"
-  @start="startTimer"
-  @stop="stopTimer"
+  :time="timeDelta"
+  :isTimerStarted="isTimerStarted"
+  @toggle="toggleTimer"
   @lap="createLap"
   ></my-timer>
 </div>
@@ -22,15 +22,8 @@ export default {
   data(){
     return{
       isTimerStarted: false,
-      hours: 0,
-      parsedHours: '',
-      minutes: 0,
-      parsedMinutes: '',
-      seconds: 0,
-      milliseconds: 0,
-      parsedSeconds: '',
-      parsedTime: '',
       timeDelta: 0,
+      lapDelta: 0,
       timeStart: 0,
       timeEnd: 0,
       Timer: 0,
@@ -41,52 +34,41 @@ export default {
   methods: {
     
     startTimer(){
-      this.isTimerStarted = true;
-      this.timeStart = Date.now();
-      this.Timer = setInterval(()=>{
-        this.timeEnd = Date.now();
-        this.timeDelta = this.timeEnd - this.timeStart;
+      if(!this.isTimerStarted){
+        this.isTimerStarted = true;
+        this.laps= []
+        this.timeStart = Date.now();
+        this.Timer = setInterval(()=>{
+          this.timeEnd = Date.now();
+          this.timeDelta = this.timeEnd - this.timeStart;
       }, 10);
+      }
     },
     stopTimer(){
       this.isTimerStarted = false;
       clearInterval(this.Timer);
     },
-
-    parseTime(){
-      this.milliseconds = this.timeDelta%100;
-      this.seconds = Math.floor(this.timeDelta/1000)%60;
-      this.minutes = Math.floor(this.timeDelta/1000/60)%60;
-      this.hours = Math.floor(this.timeDelta/1000/60/60)%60;
-      this.parsedMSeconds = this.parseTimeUnit(this.milliseconds);
-      this.parsedSeconds = this.parseTimeUnit(this.seconds);
-      this.parsedMinutes = this.parseTimeUnit(this.minutes);
-      this.parsedHours = this.parseTimeUnit(this.hours);
-      this.parsedTime = `${this.parsedHours}:${this.parsedMinutes}:${this.parsedSeconds}:${this.parsedMSeconds}`;
-    },
-    parseTimeUnit(timeUnit){
-      if (timeUnit<10){
-        return `0${timeUnit}`
+    toggleTimer(){
+      if(this.isTimerStarted){
+        this.createLap();
+        this.stopTimer();
       }
-      return `${timeUnit}`
+      else{
+        this.startTimer();
+      }
     },
     createLap(){
       if(this.isTimerStarted){
-        let lap = {id: this.laps.length+1, h:this.hours, m:this.minutes, s:this.seconds, ms:this.milliseconds};
+        if(this.laps.length>0){
+          this.lapDelta = this.timeDelta - this.laps[this.laps.length-1].delta
+        }
+        let lap = {id: this.laps.length+1, lapTime:this.timeDelta, delta:this.lapDelta};
+        console.log(lap)
         this.laps.push(lap);
       }
     }
   },
 
-  mounted() {
-    this.parseTime();
-  },
-
-  watch:{
-    timeDelta(){
-      this.parseTime();
-    }
-  }
 }
 </script>
 

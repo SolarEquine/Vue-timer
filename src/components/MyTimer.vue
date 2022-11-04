@@ -2,11 +2,13 @@
   <div class="timer__inner">
     <div class="timer__margin"></div>
     <div class="timer__body">
-      {{ timeDelta }}
+      <my-clock
+      :time="time"
+      />
     </div>
     <div class="timer__controls">
-      <button @click="$emit('start')">Старт</button>
-      <button @click="$emit('stop')">Стоп</button>
+      <button @click="$emit('toggle')" style="margin-right: 10px;"><span v-if="!isTimerStarted">Старт</span>
+        <span v-else>Стоп</span></button>
       <button @click="$emit('lap')">Круг</button>
     </div>
     <div class="timer__laps">
@@ -22,19 +24,25 @@ import TimerLaps from "@/components/TimerLaps";
 
 
 export default {
-  components: {
-    TimerLaps,
-  },
+      components: {
+        TimerLaps,
+      },
       props: {
         laps: {
           type: Array,
           required: true,
         },
-        timeDelta: {
-          type: String,
+        time: {
+          type: Number,
+          required: true,
+        },
+        isTimerStarted: {
+          type: Boolean,
           required: true,
         }
       },
+
+      
         
     }
 </script>
@@ -77,7 +85,7 @@ export default {
 
 .timer__controls{
   display: flex;
-  justify-content: space-between;
+  justify-content:center;
   width: 200px;
 }
 

@@ -3,7 +3,9 @@
     <div
         v-for="lap in laps.slice().reverse()"
         :key="lap.id"
-        class="lap">{{lap.id}}: {{lap.h}}:{{lap.m}}:{{lap.s}}:{{lap.ms}}</div>
+        class="lap"><span>{{lap.id}}: <my-clock :time="lap.lapTime"/></span> <span style="color: gray">
+            +<my-clock :time="lap.delta"/>
+        </span></div>
     </div>
 </template>
 
@@ -25,8 +27,10 @@
 
 .lap{
   border-bottom: 1px white solid;
-  margin-bottom: 10px;
+  margin-top: 15px;
   color:white;
   font-family: Roboto;
+  display: flex;
+  justify-content: space-between;
 }
 </style>
