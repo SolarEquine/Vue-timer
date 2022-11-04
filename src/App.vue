@@ -60,7 +60,10 @@ export default {
     createLap(){
       if(this.isTimerStarted){
         if(this.laps.length>0){
-          this.lapDelta = this.timeDelta - this.laps[this.laps.length-1].delta
+          this.lapDelta = this.timeDelta - this.laps[this.laps.length-1].lapTime
+        }
+        else{
+          this.lapDelta = this.timeDelta;
         }
         let lap = {id: this.laps.length+1, lapTime:this.timeDelta, delta:this.lapDelta};
         console.log(lap)
