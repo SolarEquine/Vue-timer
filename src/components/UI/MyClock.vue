@@ -28,7 +28,7 @@
         },
         methods: {
             parseTime(){
-                this.milliseconds = this.time%100;
+                this.milliseconds = Math.floor((this.time%1000)/10);
                 this.seconds = Math.floor(this.time/1000)%60;
                 this.minutes = Math.floor(this.time/1000/60)%60;
                 this.hours = Math.floor(this.time/1000/60/60)%60;

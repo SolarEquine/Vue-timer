@@ -4,9 +4,11 @@
         <div
             v-for="lap in laps.slice().reverse()"
             :key="lap.id"
-            class="lap"><span>{{lap.id}}: <my-clock :time="lap.lapTime"/></span> <span style="color: gray">
-                +<my-clock :time="lap.delta"/>
-            </span></div>
+            class="lap">
+            <span>{{lap.id}}: <my-clock :time="lap.lapTime"/></span>
+            <span style="color: gray"> +<my-clock :time="lap.delta"/>
+            </span>
+        </div>
     </transition-group>
     </div>
 </template>
