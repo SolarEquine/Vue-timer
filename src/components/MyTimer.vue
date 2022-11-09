@@ -59,7 +59,7 @@ export default {
 }
 
 .timer__margin{
-  min-height: 30vh;
+  min-height: calc((100vh - 400px)/2);
 }
 
 .timer__body{
